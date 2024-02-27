@@ -1,12 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.css';
-
-import NxWelcome from './nx-welcome';
+import SSEComponent from './components/sse-component/sse-component';
 
 export function App() {
   return (
-    <div>
-      <NxWelcome title="react-sse" />
+    <div className={styles['container']}>
+      <SSEComponent />
     </div>
   );
 }

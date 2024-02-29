@@ -8,6 +8,7 @@ app.use(cors());
 const port = process.env.PORT || 3001;
 
 let sentCount = 0;
+let intervalId;
 
 app.get('/', (req, res) => {
   res.status(200).json('API Active');
@@ -21,12 +22,9 @@ app.get('/events', (req, res) => {
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   };
 
-  // Your event logic here, such as listening to database changes
-
-  // Example: Send a message every 5 seconds
-  const interval = setInterval(() => {
+  function dataResponse() {
     if (sentCount === 12) {
-      clearInterval(interval);
+      if (intervalId) clearInterval(intervalId);
       res.end();
       sentCount = 0;
       return;
@@ -36,11 +34,16 @@ app.get('/events', (req, res) => {
       message: `Hello from server! ${++sentCount}`,
       data: posts[sentCount],
     });
-  }, 5000);
+  }
+
+  // Your event logic here, such as listening to database changes
+
+  // Example: Send a message every 5 seconds
+  intervalId = setInterval(dataResponse, 5000);
 
   // Clean up on client disconnect
   req.on('close', () => {
-    clearInterval(interval);
+    clearInterval(intervalId);
     res.end();
   });
 });
